@@ -8,12 +8,5 @@
     "app/api/**/*.ts": {
       "maxDuration": 10
     }
-  },
-  "regions": ["nrt1"],
-  "git": {
-    "deploymentEnabled": {
-      "main": true,
-      "develop": true
-    }
   }
 }
