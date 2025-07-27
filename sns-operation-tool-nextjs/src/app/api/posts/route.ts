@@ -3,20 +3,44 @@ import { supabase } from '@/lib/supabase';
 
 export async function GET() {
   try {
+    // Supabaseクライアントの初期化確認
+    if (!supabase) {
+      console.error('Supabase client is not initialized');
+      return NextResponse.json({ 
+        error: 'Database connection failed', 
+        details: 'Supabase client not initialized'
+      }, { status: 500 });
+    }
+
+    console.log('Attempting to fetch posts from Supabase...');
+    
     const { data: posts, error } = await supabase
       .from('posts')
       .select('*')
       .order('created_at', { ascending: false });
     
     if (error) {
-      console.error('Error fetching posts:', error);
-      return NextResponse.json({ error: 'Failed to fetch posts' }, { status: 500 });
+      console.error('Supabase error details:', {
+        message: error.message,
+        details: error.details,
+        hint: error.hint,
+        code: error.code
+      });
+      return NextResponse.json({ 
+        error: 'Failed to fetch posts', 
+        details: error.message,
+        code: error.code
+      }, { status: 500 });
     }
     
+    console.log('Successfully fetched posts:', posts?.length || 0);
     return NextResponse.json(posts || []);
   } catch (error) {
-    console.error('Error fetching posts:', error);
-    return NextResponse.json({ error: 'Failed to fetch posts' }, { status: 500 });
+    console.error('Unexpected error:', error);
+    return NextResponse.json({ 
+      error: 'Failed to fetch posts', 
+      details: error instanceof Error ? error.message : 'Unknown error'
+    }, { status: 500 });
   }
 }
 
