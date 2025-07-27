@@ -36,7 +36,6 @@ const nextConfig: NextConfig = {
   },
   
   // プロダクションビルド最適化
-  swcMinify: true,
   compress: true,
   
   // 環境変数の検証

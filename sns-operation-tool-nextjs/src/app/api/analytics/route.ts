@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { supabase } from '@/lib/supabase';
 
 export async function GET(request: NextRequest) {
   try {
@@ -9,7 +10,7 @@ export async function GET(request: NextRequest) {
     const endDate = searchParams.get('endDate');
 
     // 常にサンプルデータを返す（デバッグ用）
-    let postsData = [
+    const postsData = [
       {
         id: '1',
         content: '新商品リリースのお知らせ！今なら特別価格でご提供中です。詳細はプロフィールのリンクからご確認ください。',
@@ -95,7 +96,7 @@ export async function GET(request: NextRequest) {
     };
 
     // プラットフォーム別の集計（サンプルデータ用）
-    let platformStatsData = postsData;
+    const platformStatsData = postsData;
 
     // プラットフォーム別統計を手動で計算
     const platformStats: any[] = [];
