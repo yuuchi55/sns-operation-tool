@@ -1,10 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getDatabase } from '@/lib/db';
+import { supabase } from '@/lib/supabase';
 
 export async function GET() {
   try {
-    const db = getDatabase();
-    const posts = db.prepare('SELECT * FROM posts ORDER BY created_at DESC').all();
+    const { data: posts, error } = await supabase
+      .from('posts')
+      .select('*')
+      .order('created_at', { ascending: false });
+    
+    if (error) {
+      console.error('Error fetching posts:', error);
+      return NextResponse.json({ error: 'Failed to fetch posts' }, { status: 500 });
+    }
     
     return NextResponse.json(posts || []);
   } catch (error) {
@@ -22,32 +29,24 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Content is required' }, { status: 400 });
     }
     
-    const db = getDatabase();
-    const stmt = db.prepare(`
-      INSERT INTO posts (
-        content, 
-        platform, 
-        scheduled_time, 
-        tags, 
-        media_urls, 
-        status,
-        created_at,
-        updated_at
-      ) VALUES (?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))
-    `);
+    const { data, error } = await supabase
+      .from('posts')
+      .insert({
+        content: content.trim(),
+        platform,
+        scheduled_time,
+        tags,
+        media_urls,
+        status: scheduled_time ? 'scheduled' : 'draft'
+      })
+      .select();
     
-    const result = stmt.run(
-      content,
-      platform,
-      scheduled_time,
-      JSON.stringify(tags),
-      JSON.stringify(media_urls),
-      scheduled_time ? 'scheduled' : 'draft'
-    );
+    if (error) {
+      console.error('Error creating post:', error);
+      return NextResponse.json({ error: 'Failed to create post' }, { status: 500 });
+    }
     
-    const post = db.prepare('SELECT * FROM posts WHERE id = ?').get(result.lastInsertRowid);
-    
-    return NextResponse.json(post, { status: 201 });
+    return NextResponse.json(data[0], { status: 201 });
   } catch (error) {
     console.error('Error creating post:', error);
     return NextResponse.json({ error: 'Failed to create post' }, { status: 500 });

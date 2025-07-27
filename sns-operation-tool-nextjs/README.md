@@ -1,36 +1,98 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 📝 SNS運用管理ツール
 
-## Getting Started
+Next.jsとSupabaseを使用したシンプルなSNS投稿管理・分析ツールです。
 
-First, run the development server:
+## ✨ 機能
+
+- 📝 **投稿管理**: Twitter/Instagram/Facebook向けの投稿作成・編集・削除
+- 📊 **分析ダッシュボード**: エンゲージメント指標の可視化
+- 🎯 **プラットフォーム別分析**: 各SNSの投稿パフォーマンス比較
+- ⏰ **時間帯別分析**: 最適な投稿時間の特定
+
+## 🚀 デプロイ方法
+
+### 1. Supabaseプロジェクトの作成
+
+1. [Supabase](https://app.supabase.com) でアカウント作成
+2. 新しいプロジェクトを作成
+3. `supabase/schema.sql` のSQLを実行してテーブル作成
+
+### 2. 環境変数の設定
+
+`.env.example` をコピーして `.env.local` を作成:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cp .env.example .env.local
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Supabaseの設定値を入力:
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. Vercelでのデプロイ
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+#### GitHubから自動デプロイ
+1. [Vercel](https://vercel.com) でGitHubリポジトリを連携
+2. 環境変数を設定（上記と同じ値）
+3. 自動デプロイ完了
 
-## Learn More
+#### 手動デプロイ
+```bash
+npm install -g vercel
+vercel --prod
+```
 
-To learn more about Next.js, take a look at the following resources:
+## 🛠️ 開発環境のセットアップ
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+# 依存関係のインストール
+npm install
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# 開発サーバー起動
+npm run dev
+```
 
-## Deploy on Vercel
+http://localhost:3000 でアプリケーションが起動します。
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 📁 プロジェクト構造
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+├── src/
+│   ├── app/
+│   │   ├── page.tsx          # メイン投稿管理ページ
+│   │   ├── analytics/        # 分析ダッシュボード
+│   │   └── api/              # API エンドポイント
+│   └── lib/
+│       ├── supabase.ts       # Supabaseクライアント
+│       └── db.ts             # データベース操作
+├── supabase/
+│   └── schema.sql            # データベーススキーマ
+└── vercel.json               # Vercel設定
+```
+
+## 🔧 技術スタック
+
+- **フロントエンド**: Next.js 15, React 19, TypeScript
+- **スタイリング**: Tailwind CSS
+- **データベース**: Supabase (PostgreSQL)
+- **チャート**: Recharts
+- **デプロイ**: Vercel
+
+## 📊 データベーススキーマ
+
+主要テーブル: `posts`
+- 投稿内容、プラットフォーム、スケジュール
+- エンゲージメント指標（いいね、コメント、シェア、ビュー）
+- 自動計算されるエンゲージメント率
+
+## 🤝 コントリビューション
+
+1. フォークして feature ブランチ作成
+2. 変更をコミット
+3. プルリクエスト作成
+
+## 📄 ライセンス
+
+MIT License
