@@ -1,0 +1,42 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  lint-and-type-check:
+    runs-on: ubuntu-latest
+    name: Lint and Type Check
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: sns-operation-tool-nextjs/package-lock.json
+        
+    - name: Install dependencies
+      working-directory: sns-operation-tool-nextjs
+      run: npm ci
+      
+    - name: Run ESLint
+      working-directory: sns-operation-tool-nextjs
+      run: npm run lint
+      
+    - name: TypeScript type check
+      working-directory: sns-operation-tool-nextjs
+      run: npx tsc --noEmit
+      
+    - name: Build test
+      working-directory: sns-operation-tool-nextjs
+      run: npm run build
+      env:
+        NEXT_PUBLIC_SUPABASE_URL: https://test.supabase.co
+        NEXT_PUBLIC_SUPABASE_ANON_KEY: test-key

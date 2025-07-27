@@ -93,6 +93,33 @@ http://localhost:3000 でアプリケーションが起動します。
 2. 変更をコミット
 3. プルリクエスト作成
 
+## 🔄 CI/CDパイプライン
+
+### 自動化されたワークフロー
+- **コード品質チェック**: ESLint + TypeScript
+- **自動テスト**: ビルド検証
+- **自動デプロイ**: main/developブランチ
+
+### ブランチ戦略
+```
+main (production)     ←── develop (staging)
+                          ↑
+                     feature/xxx
+```
+
+### デプロイメント環境
+- **Production**: https://sns-operation-tool.vercel.app
+- **Staging**: https://sns-operation-tool-git-develop.vercel.app
+- **Health Check**: /api/health
+
+## 📊 パフォーマンス最適化
+
+- ✅ SWC Minification
+- ✅ Package Import最適化
+- ✅ セキュリティヘッダー設定
+- ✅ リージョン最適化 (Tokyo)
+- ✅ API関数タイムアウト設定
+
 ## 📄 ライセンス
 
 MIT License
